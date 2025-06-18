@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Celebración con Confeti!</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif; /* Fuente más moderna */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); /* Gradiente de fondo más brillante */
+            overflow: hidden; /* Para que el confeti no cause scrollbars */
+        }
+
+        button {
+            padding: 30px 60px; /* Botón mucho más grande */
+            font-size: 30px; /* Texto más grande */
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); /* Gradiente de botón llamativo */
+            color: white;
+            border: none;
+            border-radius: 15px; /* Bordes más redondeados */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), /* Sombra más pronunciada */
+                        0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            text-transform: uppercase; /* Texto en mayúsculas */
+            letter-spacing: 2px; /* Espaciado entre letras */
+            position: relative; /* Para que la sombra y la escala funcionen bien */
+            z-index: 5; /* Asegura que el botón esté sobre el confeti inicial */
+        }
+
+        button:hover {
+            transform: scale(1.08) translateY(-5px); /* Efecto de "levantar" */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+                        0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .confetti {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            opacity: 0;
+            position: fixed;
+            animation: confetti-fall 2s ease-out forwards; /* Animación un poco más larga */
+            z-index: 10; /* Asegura que el confeti esté por encima de todo */
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                opacity: 1;
+                transform: translateY(-50px) translateX(var(--random-x)) rotate(0deg) scale(0.5);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(calc(100vh + 50px)) translateX(var(--random-x)) rotate(720deg) scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <button onclick="mostrarTextoYConfeti(this)">¡Haz Clic Aqui para descubrirlo!</button>
+
+    <script>
+        function mostrarTextoYConfeti(boton) {
+            // Cambia el texto del botón
+            boton.innerText = "Coordinación de Pastoral";
+            
+            // Lanza el confeti
+            crearConfeti();
+
+            // Deshabilita el botón temporalmente para evitar spam de confeti
+            boton.disabled = true;
+            setTimeout(() => {
+                boton.disabled = false;
+                // Opcional: Puedes cambiar el texto de vuelta o a algo como "¡Listo!"
+                // boton.innerText = "¡Haz Clic Para Celebrar!"; 
+            }, 2500); // Suficiente tiempo para que la mayoría del confeti caiga
+        }
+
+        function crearConfeti() {
+            const cantidad = 300; // ¡Mucho más confeti!
+            const colors = [
+                '#FF6B6B', '#FFD166', '#06D6A0', '#118AB2', '#073B4C', // Colores vibrantes
+                '#EE6052', '#60D394', '#FFD97D', '#FF6B97', '#C933CC' // Más colores
+            ];
+            const body = document.body;
+
+            for (let i = 0; i < cantidad; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Genera una posición horizontal aleatoria que cubre toda la pantalla
+                const randomX = Math.random() * window.innerWidth;
+                const startY = Math.random() * -window.innerHeight; // Empieza desde arriba de la pantalla
+
+                confetti.style.backgroundColor = randomColor;
+                confetti.style.left = randomX + 'px';
+                confetti.style.top = startY + 'px'; // Posición inicial vertical
+                confetti.style.setProperty('--random-x', randomX + 'px'); // Usamos esto en la animación para la "deriva" horizontal
+
+                confetti.style.animationDelay = Math.random() * 0.8 + 's'; // Retraso para que caiga escalonado
+                confetti.style.animationDuration = Math.random() * 1.5 + 2.5 + 's'; // Duración entre 2.5 y 4 segundos
+
+                body.appendChild(confetti);
+
+                // Elimina el elemento de confeti del DOM después de que termine su animación
+                // para evitar que se acumulen muchos elementos invisibles
+                confetti.addEventListener('animationend', () => {
+                    confetti.remove();
+                });
+            }
+        }
+    </script>
+</body>
+</html>
